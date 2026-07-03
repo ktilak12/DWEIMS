@@ -51,6 +51,7 @@ CREATE TABLE IssueRecord (
     Unit_ID INT,
     Issue_Date DATE,
     Issued_Quantity INT,
+    Expected_Return DATE,
     FOREIGN KEY (Equipment_ID) REFERENCES Equipment(Equipment_ID),
     FOREIGN KEY (Unit_ID) REFERENCES DefenceUnit(Unit_ID)
 );
@@ -92,7 +93,9 @@ CREATE TABLE AuthorizedPersonnel (
     Personnel_ID INT PRIMARY KEY,
     Person_Name VARCHAR(40) NOT NULL,
     Role VARCHAR(30),
-    Rank_Name VARCHAR(30)
+    Rank_Name VARCHAR(30),
+    Username VARCHAR(50),
+    Password VARCHAR(255)
 );
 
 CREATE TABLE AuditLog (
@@ -175,37 +178,30 @@ INSERT INTO StorageLocation VALUES
 
 INSERT INTO Inventory VALUES
 -- Central Armory (Storage_ID = 1)
-(1, 1, 450, 1),    -- Assault Rifle
-(2, 2, 280, 1),    -- Machine Gun
-(3, 3, 175, 1),    -- Sniper Rifle
-(4, 4, 520, 1),    -- Pistol
-(5, 5, 190, 1),    -- Submachine Gun
-(6, 10, 8500, 1),  -- 5.56mm Ammunition
-(7, 11, 6200, 1),  -- 7.62mm Ammunition
+(1, 1, 15, 1),    -- Assault Rifle
+(2, 2, 15, 1),    -- Machine Gun
+(3, 3, 15, 1),    -- Sniper Rifle
+(4, 4, 15, 1),    -- Pistol
+(5, 5, 15, 1),    -- Submachine Gun
+(6, 10, 15, 1),  -- 5.56mm Ammunition
+(7, 11, 15, 1),  -- 7.62mm Ammunition
 
 -- Forward Base Store (Storage_ID = 2)
-(8, 6, 45, 2),     -- Howitzer
-(9, 7, 160, 2),    -- Rocket Launcher
-(10, 8, 180, 2),   -- Mortar
-(11, 9, 220, 2),   -- Anti-Tank Missile
-(12, 12, 1200, 2), -- 155mm Artillery Shell
-(13, 13, 2500, 2), -- 84mm Rocket
-(14, 14, 1800, 2), -- 120mm Mortar Bomb
+(8, 6, 15, 2),     -- Howitzer
+(9, 7, 15, 2),    -- Rocket Launcher
+(10, 8, 15, 2),   -- Mortar
+(11, 9, 15, 2),   -- Anti-Tank Missile
+(12, 12, 15, 2), -- 155mm Artillery Shell
+(13, 13, 15, 2), -- 84mm Rocket
+(14, 14, 15, 2), -- 120mm Mortar Bomb
 
 -- Northern Depot (Storage_ID = 3)
-(15, 15, 85, 3),   -- Battle Tank
-(16, 16, 155, 3),  -- Armoured Personnel Carrier
-(17, 17, 210, 3),  -- Utility Truck
-(18, 18, 165, 3),  -- Reconnaissance Vehicle
-(19, 19, 195, 3),  -- Combat Drone
-(20, 20, 230, 3),  -- Surveillance Drone
-
--- Western Arsenal (Storage_ID = 4)
-(21, 1, 320, 4),   -- Assault Rifle
-(22, 2, 195, 4),   -- Machine Gun
-(23, 10, 5400, 4), -- 5.56mm Ammunition
-(24, 11, 4800, 4), -- 7.62mm Ammunition
-(25, 19, 175, 4);  -- Combat Drone
+(15, 15, 15, 3),   -- Battle Tank
+(16, 16, 15, 3),  -- Armoured Personnel Carrier
+(17, 17, 15, 3),  -- Utility Truck
+(18, 18, 15, 3),  -- Reconnaissance Vehicle
+(19, 19, 15, 3),  -- Combat Drone
+(20, 20, 15, 3);  -- Surveillance Drone
 
 -- ==============================
 -- INSERT SUPPLIERS
@@ -222,42 +218,42 @@ INSERT INTO Supplier VALUES
 -- ==============================
 
 INSERT INTO Procurement VALUES
-(1, 1, 1, '2026-02-15', 500),
-(2, 2, 1, '2026-02-16', 300),
-(3, 6, 2, '2026-02-20', 60),
-(4, 10, 3, '2026-02-22', 10000),
-(5, 11, 3, '2026-02-22', 8000),
-(6, 15, 2, '2026-02-25', 100),
-(7, 19, 4, '2026-03-01', 250),
-(8, 20, 4, '2026-03-01', 300),
-(9, 7, 1, '2026-03-05', 200),
-(10, 9, 2, '2026-03-10', 250);
+(1, 1, 1, '2026-02-15', 15),
+(2, 2, 1, '2026-02-16', 15),
+(3, 6, 2, '2026-02-20', 15),
+(4, 10, 3, '2026-02-22', 15),
+(5, 11, 3, '2026-02-22', 15),
+(6, 15, 2, '2026-02-25', 15),
+(7, 19, 4, '2026-03-01', 15),
+(8, 20, 4, '2026-03-01', 15),
+(9, 7, 1, '2026-03-05', 15),
+(10, 9, 2, '2026-03-10', 15);
 
 -- ==============================
 -- INSERT ISSUE RECORDS
 -- ==============================
 
 INSERT INTO IssueRecord VALUES
-(1, 1, 1, '2026-03-01', 120),
-(2, 2, 2, '2026-03-02', 80),
-(3, 7, 1, '2026-03-05', 40),
-(4, 10, 1, '2026-03-06', 2500),
-(5, 11, 2, '2026-03-07', 1800),
-(6, 19, 4, '2026-03-10', 35),
-(7, 6, 3, '2026-03-12', 15),
-(8, 3, 1, '2026-03-15', 25);
+(1, 1, 1, '2026-03-01', 5, '2026-04-01'),
+(2, 2, 2, '2026-03-02', 5, '2026-04-02'),
+(3, 7, 1, '2026-03-05', 5, '2026-04-05'),
+(4, 10, 1, '2026-03-06', 5, '2026-04-06'),
+(5, 11, 2, '2026-03-07', 5, '2026-04-07'),
+(6, 19, 4, '2026-03-10', 5, '2026-04-10'),
+(7, 6, 3, '2026-03-12', 5, '2026-04-12'),
+(8, 3, 1, '2026-03-15', 5, '2026-04-15');
 
 -- ==============================
 -- INSERT RETURN RECORDS
 -- ==============================
 
 INSERT INTO ReturnRecord VALUES
-(1, 1, '2026-03-10', 30),
-(2, 2, '2026-03-12', 20),
-(3, 3, '2026-03-15', 10),
-(4, 4, '2026-03-16', 500),
-(5, 5, '2026-03-17', 400),
-(6, 8, '2026-03-20', 5);
+(1, 1, '2026-03-10', 2),
+(2, 2, '2026-03-12', 2),
+(3, 3, '2026-03-15', 2),
+(4, 4, '2026-03-16', 2),
+(5, 5, '2026-03-17', 2),
+(6, 8, '2026-03-20', 2);
 
 -- ==============================
 -- INSERT MAINTENANCE RECORDS
@@ -278,12 +274,12 @@ INSERT INTO Maintenance VALUES
 -- ==============================
 
 INSERT INTO AuthorizedPersonnel VALUES
-(1, 'Ravi Kumar', 'Inventory Officer', 'Captain'),
-(2, 'Anil Sharma', 'Store Manager', 'Major'),
-(3, 'Priya Singh', 'Logistics Head', 'Colonel'),
-(4, 'Vikram Mehta', 'Armory Supervisor', 'Lieutenant'),
-(5, 'Sunil Dutt', 'Maintenance Chief', 'Major'),
-(6, 'Neha Gupta', 'Procurement Officer', 'Captain');
+(1, 'Ravi Kumar', 'Admin', 'Captain', 'admin', '$2b$10$2a19GgdUvYeWLG1CVOOoGeWEmPvLp0jHp3K2VoJ6rxu6T54nHfZie'),
+(2, 'Anil Sharma', 'Officer', 'Major', 'anil', '$2b$10$2a19GgdUvYeWLG1CVOOoGeWEmPvLp0jHp3K2VoJ6rxu6T54nHfZie'),
+(3, 'Priya Singh', 'Logistics Head', 'Colonel', NULL, NULL),
+(4, 'Vikram Mehta', 'Armory Supervisor', 'Lieutenant', NULL, NULL),
+(5, 'Sunil Dutt', 'Maintenance Chief', 'Major', NULL, NULL),
+(6, 'Neha Gupta', 'Procurement Officer', 'Captain', NULL, NULL);
 
 -- ==============================
 -- INSERT AUDIT LOGS
