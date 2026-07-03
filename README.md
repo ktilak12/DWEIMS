@@ -1,227 +1,110 @@
-# DWEIMS — Defence Weapons Equipment Inventory Management System
+# Redux Toolkit
 
-A full-stack, real-time military asset tracking platform built for managing the lifecycle of defence equipment — from procurement and storage through issuance to field units, and return.
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/reduxjs/redux-toolkit/tests.yml?style=flat-square)
+[![npm version](https://img.shields.io/npm/v/@reduxjs/toolkit.svg?style=flat-square)](https://www.npmjs.com/package/@reduxjs/toolkit)
+[![npm downloads](https://img.shields.io/npm/dm/@reduxjs/toolkit.svg?style=flat-square&label=RTK+downloads)](https://www.npmjs.com/package/@reduxjs/toolkit)
 
----
+**The official, opinionated, batteries-included toolset for efficient Redux development**
 
-## 📸 Overview
+## Installation
 
-DWEIMS provides a secure, role-based dashboard that gives defence administrators a live tactical view of all equipment assets. It tracks:
+### Create a React Redux App
 
-- **Remaining assets** currently in storage
-- **Deployed assets** issued to field units
-- **Equipment under maintenance**
-- **Red flags** (overdue returns + low stock)
+The recommended way to start new apps with React and Redux Toolkit is by using [our official Redux Toolkit + TS template for Vite](https://github.com/reduxjs/redux-templates), or by creating a new Next.js project using [Next's `with-redux` template](https://github.com/vercel/next.js/tree/canary/examples/with-redux).
 
-Data updates in real-time via WebSockets whenever any inventory action is performed.
-
----
-
-## 🏗️ Architecture
-
-```
-DWEIMS/
-├── backend/          # Node.js + Express REST API + Socket.io
-│   ├── config/       # MySQL connection pool
-│   ├── middleware/   # JWT auth & request logger
-│   ├── routes/       # API route handlers
-│   └── server.js     # Entry point
-├── frontend/         # React + Vite + TailwindCSS
-│   └── src/
-│       ├── components/   # Reusable UI components
-│       ├── context/      # Auth context (JWT management)
-│       ├── layouts/      # Dashboard shell / sidebar
-│       ├── pages/        # Application pages
-│       └── services/     # api.js — all fetch calls
-└── database.sql      # Full MySQL schema + seed data
-```
-
----
-
-## ⚙️ Tech Stack
-
-| Layer      | Technology                                      |
-|------------|-------------------------------------------------|
-| Frontend   | React 19, Vite 8, TailwindCSS 4, Recharts       |
-| Backend    | Node.js, Express 5, Socket.io 4                 |
-| Database   | MySQL 8 (via `mysql2/promise` connection pool)  |
-| Auth       | JWT (12 h expiry) + bcryptjs password hashing   |
-| Validation | Zod (request body schemas)                      |
-| Real-time  | WebSocket (`inventoryUpdate` event)             |
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js ≥ 18
-- MySQL 8 running locally
-- A database named `DefenceInventoryDB`
-
-### 1. Database Setup
-
-```sql
--- In MySQL Workbench or CLI:
-CREATE DATABASE DefenceInventoryDB;
-USE DefenceInventoryDB;
-SOURCE database.sql;   -- runs schema + seed data
-```
-
-### 2. Backend
+Both of these already have Redux Toolkit and React-Redux configured appropriately for that build tool, and come with a small example app that demonstrates how to use several of Redux Toolkit's features.
 
 ```bash
-cd backend
-npm install
+# Vite with our Redux+TS template
+# (using the `degit` tool to clone and extract the template)
+npx degit reduxjs/redux-templates/packages/vite-template-redux my-app
+
+# Next.js using the `with-redux` template
+npx create-next-app --example with-redux my-app
 ```
 
-Create / edit `backend/.env`:
+We do not currently have official React Native templates, but recommend these templates for standard React Native and for Expo:
 
-```env
-PORT=5001
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_mysql_password
-DB_NAME=DefenceInventoryDB
-JWT_SECRET=your_secret_key
-```
+- https://github.com/rahsheen/react-native-template-redux-typescript
+- https://github.com/rahsheen/expo-template-redux-typescript
 
-Start the server:
+### An Existing App
+
+Redux Toolkit is available as a package on NPM for use with a module bundler or in a Node application:
 
 ```bash
-node server.js
-# or: npm start
+# NPM
+npm install @reduxjs/toolkit
+
+# Yarn
+yarn add @reduxjs/toolkit
 ```
 
-The API will be available at `http://localhost:5001`.
+The package includes a precompiled ESM build that can be used as a [`<script type="module">` tag](https://unpkg.com/@reduxjs/toolkit/dist/redux-toolkit.browser.mjs) directly in the browser.
 
-### 3. Frontend
+## Documentation
 
-```bash
-cd frontend
-npm install
-npm run dev
+The Redux Toolkit docs are available at **https://redux-toolkit.js.org**, including API references and usage guides for all of the APIs included in Redux Toolkit.
+
+The Redux core docs at https://redux.js.org includes the full Redux tutorials, as well usage guides on general Redux patterns.
+
+## Purpose
+
+The **Redux Toolkit** package is intended to be the standard way to write Redux logic. It was originally created to help address three common concerns about Redux:
+
+- "Configuring a Redux store is too complicated"
+- "I have to add a lot of packages to get Redux to do anything useful"
+- "Redux requires too much boilerplate code"
+
+We can't solve every use case, but in the spirit of [`create-react-app`](https://github.com/facebook/create-react-app), we can try to provide some tools that abstract over the setup process and handle the most common use cases, as well as include some useful utilities that will let the user simplify their application code.
+
+Because of that, this package is deliberately limited in scope. It does _not_ address concepts like "reusable encapsulated Redux modules", folder or file structures, managing entity relationships in the store, and so on.
+
+Redux Toolkit also includes a powerful data fetching and caching capability that we've dubbed "RTK Query". It's included in the package as a separate set of entry points. It's optional, but can eliminate the need to hand-write data fetching logic yourself.
+
+## What's Included
+
+Redux Toolkit includes these APIs:
+
+- `configureStore()`: wraps `createStore` to provide simplified configuration options and good defaults. It can automatically combine your slice reducers, add whatever Redux middleware you supply, includes `redux-thunk` by default, and enables use of the Redux DevTools Extension.
+- `createReducer()`: lets you supply a lookup table of action types to case reducer functions, rather than writing switch statements. In addition, it automatically uses the [`immer` library](https://github.com/mweststrate/immer) to let you write simpler immutable updates with normal mutative code, like `state.todos[3].completed = true`.
+- `createAction()`: generates an action creator function for the given action type string. The function itself has `toString()` defined, so that it can be used in place of the type constant.
+- `createSlice()`: combines `createReducer()` + `createAction()`. Accepts an object of reducer functions, a slice name, and an initial state value, and automatically generates a slice reducer with corresponding action creators and action types.
+- `combineSlices()`: combines multiple slices into a single reducer, and allows "lazy loading" of slices after initialisation.
+- `createListenerMiddleware()`: lets you define "listener" entries that contain an "effect" callback with additional logic, and a way to specify when that callback should run based on dispatched actions or state changes. A lightweight alternative to Redux async middleware like sagas and observables.
+- `createAsyncThunk()`: accepts an action type string and a function that returns a promise, and generates a thunk that dispatches `pending/resolved/rejected` action types based on that promise
+- `createEntityAdapter()`: generates a set of reusable reducers and selectors to manage normalized data in the store
+- The `createSelector()` utility from the [Reselect](https://github.com/reduxjs/reselect) library, re-exported for ease of use.
+
+For details, see [the Redux Toolkit API Reference section in the docs](https://redux-toolkit.js.org/api/configureStore).
+
+## RTK Query
+
+**RTK Query** is provided as an optional addon within the `@reduxjs/toolkit` package. It is purpose-built to solve the use case of data fetching and caching, supplying a compact, but powerful toolset to define an API interface layer for your app. It is intended to simplify common cases for loading data in a web application, eliminating the need to hand-write data fetching & caching logic yourself.
+
+RTK Query is built on top of the Redux Toolkit core for its implementation, using [Redux](https://redux.js.org/) internally for its architecture. Although knowledge of Redux and RTK are not required to use RTK Query, you should explore all of the additional global store management capabilities they provide, as well as installing the [Redux DevTools browser extension](https://github.com/reduxjs/redux-devtools), which works flawlessly with RTK Query to traverse and replay a timeline of your request & cache behavior.
+
+RTK Query is included within the installation of the core Redux Toolkit package. It is available via either of the two entry points below:
+
+```ts no-transpile
+import { createApi } from '@reduxjs/toolkit/query'
+
+/* React-specific entry point that automatically generates
+   hooks corresponding to the defined endpoints */
+import { createApi } from '@reduxjs/toolkit/query/react'
 ```
 
-The UI will be available at `http://localhost:5173`.
+### What's included
 
----
+RTK Query includes these APIs:
 
-## 🔐 Authentication
+- `createApi()`: The core of RTK Query's functionality. It allows you to define a set of endpoints describe how to retrieve data from a series of endpoints, including configuration of how to fetch and transform that data. In most cases, you should use this once per app, with "one API slice per base URL" as a rule of thumb.
+- `fetchBaseQuery()`: A small wrapper around fetch that aims to simplify requests. Intended as the recommended baseQuery to be used in createApi for the majority of users.
+- `<ApiProvider />`: Can be used as a Provider if you do not already have a Redux store.
+- `setupListeners()`: A utility used to enable refetchOnMount and refetchOnReconnect behaviors.
 
-All API routes (except `POST /api/auth/login`) require a `Bearer` token in the `Authorization` header.
+See the [**RTK Query Overview**](https://redux-toolkit.js.org/rtk-query/overview) page for more details on what RTK Query is, what problems it solves, and how to use it.
 
-Tokens are issued on login, stored in `localStorage`, and expire after **12 hours**.  
-On a 401 response the frontend automatically clears the token and redirects to `/login`.
+## Contributing
 
-### Roles
-
-| Role    | Permissions                                         |
-|---------|-----------------------------------------------------|
-| Admin   | Full access — issue, return, view all data          |
-| Officer | Can issue and return assets                         |
-| Viewer  | Read-only access to inventory and reports           |
-
----
-
-## 📡 API Reference
-
-### Auth
-| Method | Endpoint            | Description              |
-|--------|---------------------|--------------------------|
-| POST   | `/api/auth/login`   | Login — returns JWT token |
-
-### Inventory
-| Method | Endpoint                      | Description                          |
-|--------|-------------------------------|--------------------------------------|
-| GET    | `/api/inventory/metrics`      | Dashboard KPIs (available, issued…)  |
-| GET    | `/api/inventory`              | Full inventory list                  |
-| GET    | `/api/inventory/available`    | Items with qty > 0 (for issue form)  |
-| GET    | `/api/inventory/alerts`       | Overdue + low-stock + maintenance    |
-| POST   | `/api/inventory/issue`        | Issue asset to a unit (Admin/Officer)|
-| GET    | `/api/inventory/issued`       | Currently deployed assets            |
-| GET    | `/api/inventory/returns`      | Return history                       |
-| POST   | `/api/inventory/return`       | Return an asset (Admin/Officer)      |
-
-### Other
-| Method | Endpoint             | Description            |
-|--------|----------------------|------------------------|
-| GET    | `/api/personnel`     | Defence units list     |
-| GET    | `/api/procurement`   | Procurement records    |
-| GET    | `/api/suppliers`     | Supplier list          |
-| GET    | `/api/audit`         | Audit log              |
-| GET    | `/api/issues`        | Outstanding issues     |
-| GET    | `/api/health`        | Health check           |
-
----
-
-## 🖥️ Application Pages
-
-| Page              | Route          | Description                                          |
-|-------------------|----------------|------------------------------------------------------|
-| Login             | `/login`       | Credential entry, JWT issued on success              |
-| Command Center    | `/`            | Live tactical overview: KPI cards + real-time chart  |
-| Inventory Matrix  | `/inventory`   | Full equipment table with status & quantities        |
-| Authorize Asset   | `/issue`       | Form to issue equipment to a defence unit            |
-| Weapons Taken     | `/taken`       | All currently deployed assets                        |
-| Return Records    | `/returns`     | History of all asset returns                         |
-| Procurement       | `/procurement` | Procurement history per supplier                     |
-| Suppliers         | `/suppliers`   | Registered supplier details                          |
-| Audit Logs        | `/audit`       | Action log for accountability                        |
-
----
-
-## 🔄 Real-Time Updates
-
-The backend emits an `inventoryUpdate` WebSocket event whenever an asset is issued or returned. The frontend dashboard subscribes to this event and silently re-fetches metrics — no page reload required.
-
-```
-Browser  ──(WebSocket)──►  Socket.io Server
-                               │
-                    POST /issue or /return
-                               │
-                    io.emit('inventoryUpdate')
-                               │
-Browser  ◄──────────────  dashboard re-fetches metrics
-```
-
----
-
-## 🛡️ Security
-
-- Passwords hashed with **bcryptjs** before storage.
-- All sensitive routes protected by `requireAuth` middleware (JWT verification).
-- Issue / Return routes additionally protected by `requireRole(['Admin', 'Officer'])`.
-- CORS enabled for development; restrict `origin` in production.
-
----
-
-## 📊 Database Schema (Key Tables)
-
-| Table                | Purpose                                         |
-|----------------------|-------------------------------------------------|
-| `AuthorizedPersonnel`| System users with hashed passwords and roles   |
-| `Equipment`          | Master list of all equipment items             |
-| `EquipmentCategory`  | Category / classification of equipment         |
-| `Inventory`          | Current stock levels per storage location      |
-| `StorageLocation`    | Physical storage locations                     |
-| `DefenceUnit`        | Military units that receive assets             |
-| `IssueRecord`        | Record of every asset issuance                 |
-| `ReturnRecord`       | Record of every asset return                   |
-| `Maintenance`        | Maintenance history and status                 |
-| `Procurement`        | Purchase records per supplier                  |
-| `Supplier`           | Supplier master data                           |
-| `AuditLog`           | Immutable log of all system actions            |
-
----
-
-## 🐛 Known Issues / Notes
-
-- **Double-trigger protection**: MySQL has an `update_inventory` trigger on `IssueRecord` AND the issue route manually deducts stock. The route detects and corrects any double-deduction automatically.
-- **Metrics clamping**: The "Assets Taken" metric uses `GREATEST(0, ...)` per row to prevent corrupt return data from producing negative counts.
-
----
-
-## 📄 License
-
-Internal use only — Defence Systems Project.
+Please refer to our [contributing guide](/CONTRIBUTING.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to Redux Toolkit.
